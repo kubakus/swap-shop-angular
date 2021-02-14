@@ -1,0 +1,7 @@
+version: '3.3'
+services:
+  ui:
+    image: nginx:1.16-alpine
+    network_mode: host
+    volumes:
+      - ./nginx-server.conf:/etc/nginx/nginx.conf
