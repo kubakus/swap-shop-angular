@@ -1,20 +1,17 @@
-export namespace Users {
-    export interface User {
-        id: string;
-        name: string;
-    }
-    
-    export interface CreateUserRequest {
-        name: string;
-        email: string;
-        password: string;
-    }
+import { Base } from "./base";
 
+export namespace Users {
     export interface LoginDetails {
         email: string;
         password: string;
     }
 
+    export interface CreateRequest extends LoginDetails {
+        name: string;
+    }
+
+    export interface User extends CreateRequest, Base.Record{}
+    
     export interface TokenResponse {
         token: string;
         expiresIn: string;
