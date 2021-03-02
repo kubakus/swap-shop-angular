@@ -15,7 +15,7 @@ export class AuthService {
         this.httpClient = httpClient;
     }
 
-    public register(request: Users.CreateUserRequest): Observable<void> {
+    public register(request: Users.CreateRequest): Observable<void> {
         return this.httpClient.post<void>(`${ROOT_ROUTE}/register`, request)
     }
 
@@ -30,6 +30,11 @@ export class AuthService {
         )
     }
 
+    public logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('expiresAt');
+    }
+
     public isLoggedIn(): boolean {
         const expiration = localStorage.getItem('expiresAt');
         if (!expiration) {
@@ -37,5 +42,9 @@ export class AuthService {
         }
         const expiresAt = JSON.parse(expiration);
         return moment().isBefore(moment(expiresAt))
+    }
+
+    public getUserInfo(): Observable<Users.User> {
+        return this.httpClient.get<Users.User>(`${ROOT_ROUTE}/me`)
     }
 }

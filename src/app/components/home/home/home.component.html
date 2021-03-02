@@ -1,1 +1,52 @@
-<p>home works!</p>
+<div class="center-flex">
+    <div class="card">
+        <div class="center-flex">
+        <h2>Put something on SwapShop...</h2>
+    </div>
+    <form [formGroup]="form" class="form-container" (submit)="onSubmit()">
+        <mat-form-field>
+            <mat-label>Type</mat-label>
+                <select matNativeControl [formControl]="typeControl">
+                    <option *ngFor="let type of types" [value]="type.name">
+                        {{ type.displayName }}
+                    </option>
+                </select>
+        </mat-form-field>
+        <!-- item -->
+        <mat-form-field>
+            <mat-label>Item</mat-label>
+            <input matInput formControlName="item" maxlength="50" type="text">
+            <mat-hint align="end">{{ form.controls.item.value && form.controls.item.value.length || 0 }}/50</mat-hint>
+            <mat-error *ngIf="form.controls.item.invalid">{{ getRequiredErrorMessage('item') }}</mat-error>
+        </mat-form-field>
+        <!-- info -->
+        <mat-form-field>
+            <mat-label>Info</mat-label>
+            <textarea matInput formControlName="info" maxlength="300"></textarea>
+            <mat-hint align="end">{{ form.controls.info.value && form.controls.info.value.length || 0 }}/300</mat-hint>
+            <mat-error *ngIf="form.controls.info.invalid">{{ getRequiredErrorMessage('info') }}</mat-error>
+        </mat-form-field>
+        <!-- deal -->
+        <mat-form-field>
+            <mat-label>Deal</mat-label>
+            <textarea matInput formControlName="deal" maxlength="100"></textarea>
+            <mat-hint align="end">{{ form.controls.deal.value && form.controls.deal.value.length || 0 }}/100</mat-hint>
+            <mat-error *ngIf="form.controls.deal.invalid">{{ getRequiredErrorMessage('deal') }}</mat-error>
+        </mat-form-field>
+        <!-- email -->
+        <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" readonly>
+        </mat-form-field>
+        <!-- name -->
+        <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input matInput type="text" formControlName="name">
+            <mat-error *ngIf="form.controls.deal.invalid">{{ getRequiredErrorMessage('name') }}</mat-error>
+        </mat-form-field>
+        <div class="center-flex">
+            <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid">Submit</button>
+        </div>
+    </form>
+</div>
+</div>
