@@ -9,16 +9,15 @@ import { Base } from 'src/app/shared/models/base';
 import { SelectItem } from 'src/app/shared/models/select-types';
 import { SwapShopServices } from 'src/app/shared/models/swap-shop-services';
 
-
 const types: SelectItem[] = [
   { name: SwapShopServices.Type.OFFER, displayName: 'Offered' },
-  { name: SwapShopServices.Type.WANTED, displayName: 'Wanted' }
-]
+  { name: SwapShopServices.Type.WANTED, displayName: 'Wanted' },
+];
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
   public form: FormGroup;
@@ -30,7 +29,11 @@ export class HomeComponent implements OnInit {
   private offersService: OffersService;
   private wantedService: WantedService;
 
-  public  constructor(authService: AuthService, offersService: OffersService, wantedService: WantedService) {
+  public constructor(
+    authService: AuthService,
+    offersService: OffersService,
+    wantedService: WantedService,
+  ) {
     this.authService = authService;
     this.offersService = offersService;
     this.wantedService = wantedService;
@@ -42,12 +45,15 @@ export class HomeComponent implements OnInit {
       item: new FormControl(undefined, Validators.required),
       info: new FormControl(undefined, Validators.required),
       deal: new FormControl(undefined, Validators.required),
-      email: new FormControl(undefined, Validators.compose([Validators.required, Validators.email])),
-      name: new FormControl(undefined, Validators.required)
-    })
-   }
+      email: new FormControl(
+        undefined,
+        Validators.compose([Validators.required, Validators.email]),
+      ),
+      name: new FormControl(undefined, Validators.required),
+    });
+  }
 
-  public getRequiredErrorMessage(name: string): string | undefined{
+  public getRequiredErrorMessage(name: string): string | undefined {
     if (this.form.controls[name]?.hasError('required')) {
       return `${this.capitalize(name)} is required`;
     }
@@ -56,15 +62,15 @@ export class HomeComponent implements OnInit {
 
   public ngOnInit(): void {
     // this.authService.logout()
-    this.authService.getUserInfo().subscribe(res => {
-      this.form.controls.email.setValue(res.email)
-    })
+    this.authService.getUserInfo().subscribe((res) => {
+      this.form.controls.email.setValue(res.email);
+    });
   }
 
-  public onSubmit() {
+  public onSubmit(): void {
     const type = this.form.value.type as SwapShopServices.Type;
     if (!type) {
-      console.error("Trying to submit a form without a type of service");
+      console.error('Trying to submit a form without a type of service');
       return;
     }
     let createObs: Observable<Base.CreateResponse>;
@@ -75,7 +81,7 @@ export class HomeComponent implements OnInit {
       deal: this.form.value.deal,
       item: this.form.value.item,
       email: this.form.value.email,
-    }
+    };
 
     switch (type) {
       case SwapShopServices.Type.OFFER:
@@ -86,12 +92,11 @@ export class HomeComponent implements OnInit {
         break;
       case SwapShopServices.Type.EVENT:
       default:
-        console.error("Unknown type of service", type);
+        console.error('Unknown type of service', type);
         return;
     }
-    createObs.pipe(take(1)).subscribe(res => console.log("created", res))
+    createObs.pipe(take(1)).subscribe((res) => console.log('created', res));
   }
-
 
   private capitalize(s: string): string {
     return s.charAt(0).toUpperCase() + s.slice(1);
