@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { take } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
 import { Users } from 'src/app/shared/models/users';
 
@@ -30,8 +31,16 @@ export class RegisterComponent {
       email: this.form.value.email,
       password: this.form.value.password,
     };
-    this.accountService.register(userRequest).subscribe((res) => {
-      console.log('created', res);
-    });
+    this.accountService
+      .register(userRequest)
+      .pipe(take(1))
+      .subscribe(
+        (res) => {
+          console.log('created', res);
+        },
+        (err) => {
+          console.error('Failed to register new a account', err);
+        },
+      );
   }
 }

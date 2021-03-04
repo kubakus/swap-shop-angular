@@ -5,6 +5,7 @@ import { take } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
 import { OffersService } from 'src/app/services/offers.service';
 import { WantedService } from 'src/app/services/wanted.service';
+import { capitalize } from 'src/app/shared/helpers';
 import { Base } from 'src/app/shared/models/base';
 import { SelectItem } from 'src/app/shared/models/select-types';
 import { SwapShopServices } from 'src/app/shared/models/swap-shop-services';
@@ -15,11 +16,11 @@ const types: SelectItem[] = [
 ];
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
+  selector: 'app-add-offers-wanted',
+  templateUrl: './add-offers-wanted.component.html',
+  styleUrls: ['./add-offers-wanted.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class AddOffersWantedComponent implements OnInit {
   public form: FormGroup;
   public types = types;
   public selectedType?: SwapShopServices.Type;
@@ -55,16 +56,22 @@ export class HomeComponent implements OnInit {
 
   public getRequiredErrorMessage(name: string): string | undefined {
     if (this.form.controls[name]?.hasError('required')) {
-      return `${this.capitalize(name)} is required`;
+      return `${capitalize(name)} is required`;
     }
     return undefined;
   }
 
   public ngOnInit(): void {
     // this.authService.logout()
-    this.authService.getUserInfo().subscribe((res) => {
-      this.form.controls.email.setValue(res.email);
-    });
+    this.authService
+      .getUserInfo()
+      .pipe(take(1))
+      .subscribe(
+        (res) => {
+          this.form.controls.email.setValue(res.email);
+        },
+        (err) => console.error('Failed to get user info', err),
+      );
   }
 
   public onSubmit(): void {
@@ -95,10 +102,9 @@ export class HomeComponent implements OnInit {
         console.error('Unknown type of service', type);
         return;
     }
-    createObs.pipe(take(1)).subscribe((res) => console.log('created', res));
-  }
-
-  private capitalize(s: string): string {
-    return s.charAt(0).toUpperCase() + s.slice(1);
+    createObs.pipe(take(1)).subscribe(
+      (res) => console.log('created', res),
+      (err) => console.error('Failed to create new item', err),
+    );
   }
 }

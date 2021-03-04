@@ -1,0 +1,40 @@
+<div class="center-flex">
+
+        <h2>Put an event on SwapShop...</h2>
+        <form [formGroup]="form" class="form-container" (submit)="onSubmit()">
+            <!-- event name -->
+            <mat-form-field>
+                <mat-label>Event Name</mat-label>
+                <input matInput formControlName="eventName" maxlength="50" type="text">
+                <mat-hint align="end">{{ form.controls.eventName.value && form.controls.eventName.value.length || 0 }}/50</mat-hint>
+                <mat-error *ngIf="form.controls.eventName.invalid">{{ getRequiredErrorMessage('eventName') }}</mat-error>
+            </mat-form-field>
+            <!-- when -->
+            <mat-form-field>
+                <mat-label>When</mat-label>
+                <!-- Setting this to readonly to disable manual input. Due to that, there is no need for
+                validation since user can only choose dates after next email release dates -->
+                <input matInput readonly formControlName="when" [min]="dayAfterNextSubsOut" [matDatepicker]="picker">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-hint>Date cannot be earlier than {{ dayAfterNextSubsOut.toUTCString() }}</mat-hint>
+                <mat-error *ngIf="form.controls.when.invalid">{{ getRequiredErrorMessage('when') }}</mat-error>
+            </mat-form-field>
+            <!-- info -->
+            <mat-form-field>
+                <mat-label>Info</mat-label>
+                <textarea matInput formControlName="info"></textarea>
+                <mat-error *ngIf="form.controls.info.invalid">{{ getRequiredErrorMessage('info') }}</mat-error>
+            </mat-form-field>
+            <!-- contact -->
+            <mat-form-field>
+                <mat-label>Contact Information</mat-label>
+                <input matInput formControlName="contactInfo" type="text">
+                <mat-error *ngIf="form.controls.contactInfo.invalid">{{ getRequiredErrorMessage('contactInfo') }}</mat-error>
+            </mat-form-field>
+            <div class="center-flex">
+                <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid">Submit</button>
+            </div>
+        </form>
+        <a routerLink="..">Do you want add an item to the SwapShop?</a>
+</div>
