@@ -16,8 +16,8 @@ export namespace SwapShopServices {
   export interface Event extends EventCreateRequest, Base.Record {}
 
   export interface EventCreateRequest {
-    name: string;
-    when: string; // Should be a date
+    eventName: string;
+    when: Date; // Should be a date
     info: string;
     contactInfo: string; // Should be an email/phone ?
   }

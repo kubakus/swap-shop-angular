@@ -1,8 +1,5 @@
 <div class="center-flex">
-    <div class="card">
-        <div class="center-flex">
         <h2>Put something on SwapShop...</h2>
-    </div>
     <form [formGroup]="form" class="form-container" (submit)="onSubmit()">
         <mat-form-field>
             <mat-label>Type</mat-label>
@@ -11,6 +8,7 @@
                         {{ type.displayName }}
                     </option>
                 </select>
+                <mat-error *ngIf="form.controls.type.invalid">{{ getRequiredErrorMessage('type') }}</mat-error>
         </mat-form-field>
         <!-- item -->
         <mat-form-field>
@@ -48,5 +46,6 @@
             <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid">Submit</button>
         </div>
     </form>
-</div>
+    <a routerLink="add-event">Do you want to add an event to the SwapShop?</a>
+
 </div>

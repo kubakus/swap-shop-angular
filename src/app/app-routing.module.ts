@@ -4,7 +4,8 @@ import { AuthGuard } from './guards/auth-guard';
 
 const accountModule = () =>
   import('./components/account/account.module').then((x) => x.AccountModule);
-const homeModule = () => import('./components/home/home.module').then((x) => x.HomeModule);
+const homeModule = () =>
+  import('./components/users-pages/users-pages.module').then((x) => x.HomeModule);
 
 const routes: Routes = [
   { path: '', loadChildren: homeModule, canActivate: [AuthGuard] },
