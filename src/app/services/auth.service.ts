@@ -5,7 +5,7 @@ import { Users } from '../shared/models/users';
 import moment from 'moment';
 import { map, shareReplay } from 'rxjs/operators';
 
-const ROOT_ROUTE = 'api/users';
+const ROOT_ROUTE = 'api/auth';
 
 export const STORAGE = sessionStorage;
 
