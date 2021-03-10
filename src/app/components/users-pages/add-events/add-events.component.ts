@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { take } from 'rxjs/operators';
+import { AlertService } from 'src/app/services/alert.service';
 import { EventsService } from 'src/app/services/events.service';
 import { capitalize } from 'src/app/shared/helpers';
+import { Alerts } from 'src/app/shared/models/alerts';
 import { SwapShopServices } from 'src/app/shared/models/swap-shop-services';
 
 // Sunday is equal to 0;
@@ -20,8 +22,9 @@ export class AddEventsComponent {
   public dayAfterNextSubsOut: Date = this.getNextDate();
 
   private eventsService: EventsService;
+  private alertService: AlertService;
 
-  public constructor(eventsService: EventsService) {
+  public constructor(eventsService: EventsService, alertService: AlertService) {
     this.form = new FormGroup({
       eventName: new FormControl(undefined, Validators.required),
       // TODO add correct data validator
@@ -29,9 +32,9 @@ export class AddEventsComponent {
       info: new FormControl(undefined, Validators.required),
       contactInfo: new FormControl(undefined, Validators.required),
     });
-    console.log('pub', this.dayAfterNextSubsOut.toUTCString());
 
     this.eventsService = eventsService;
+    this.alertService = alertService;
   }
   public getRequiredErrorMessage(name: string): string | undefined {
     if (this.form.controls[name]?.hasError('required')) {
@@ -51,8 +54,20 @@ export class AddEventsComponent {
       .createEvent(request)
       .pipe(take(1))
       .subscribe(
-        (res) => console.log('created event', res),
-        (err) => console.error('Failed to create new event', err),
+        (_res) =>
+          this.alertService.show({
+            type: 'success',
+            message: 'Event has been submitted',
+            autoClose: Alerts.AlertLength.Normal,
+          }),
+        (err) => {
+          console.error('Failed to create new event', err);
+          this.alertService.show({
+            type: 'error',
+            message: 'Failed to submit new event',
+            autoClose: Alerts.AlertLength.Normal,
+          });
+        },
       );
   }
 
