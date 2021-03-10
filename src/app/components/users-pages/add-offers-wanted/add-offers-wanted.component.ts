@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { OffersService } from 'src/app/services/offers.service';
 import { WantedService } from 'src/app/services/wanted.service';
 import { capitalize } from 'src/app/shared/helpers';
+import { Alerts } from 'src/app/shared/models/alerts';
 import { Base } from 'src/app/shared/models/base';
 import { SelectItem } from 'src/app/shared/models/select-types';
 import { SwapShopServices } from 'src/app/shared/models/swap-shop-services';
@@ -29,15 +31,18 @@ export class AddOffersWantedComponent implements OnInit {
   private authService: AuthService;
   private offersService: OffersService;
   private wantedService: WantedService;
+  private alertService: AlertService;
 
   public constructor(
     authService: AuthService,
     offersService: OffersService,
     wantedService: WantedService,
+    alertService: AlertService,
   ) {
     this.authService = authService;
     this.offersService = offersService;
     this.wantedService = wantedService;
+    this.alertService = alertService;
 
     // Needs to be create separately so it can be referenced in the template
     this.typeControl = new FormControl(undefined, Validators.required);
@@ -62,7 +67,6 @@ export class AddOffersWantedComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    // this.authService.logout()
     this.authService
       .getUserInfo()
       .pipe(take(1))
@@ -89,13 +93,19 @@ export class AddOffersWantedComponent implements OnInit {
       item: this.form.value.item,
       email: this.form.value.email,
     };
+    let successMessage: string;
+    let errorMessage: string;
 
     switch (type) {
       case SwapShopServices.Type.OFFER:
         createObs = this.offersService.createOffer(request);
+        successMessage = 'Offer has been submitted';
+        errorMessage = 'Failed to submit new offer';
         break;
       case SwapShopServices.Type.WANTED:
         createObs = this.wantedService.createWanted(request);
+        successMessage = 'Wanted offer has been submitted';
+        errorMessage = 'Failed to create wanted offer';
         break;
       case SwapShopServices.Type.EVENT:
       default:
@@ -103,8 +113,20 @@ export class AddOffersWantedComponent implements OnInit {
         return;
     }
     createObs.pipe(take(1)).subscribe(
-      (res) => console.log('created', res),
-      (err) => console.error('Failed to create new item', err),
+      (_res) =>
+        this.alertService.show({
+          type: 'success',
+          message: successMessage,
+          autoClose: Alerts.AlertLength.Normal,
+        }),
+      (err) => {
+        console.error('Failed to create new item', err);
+        this.alertService.show({
+          type: 'error',
+          message: errorMessage,
+          autoClose: Alerts.AlertLength.Long,
+        });
+      },
     );
   }
 }

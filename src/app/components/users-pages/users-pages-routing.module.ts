@@ -4,7 +4,8 @@ import { AddEventsComponent } from './add-events/add-events.component';
 import { AddOffersWantedComponent } from './add-offers-wanted/add-offers-wanted.component';
 
 const routes: Routes = [
-  { path: '', component: AddOffersWantedComponent },
+  { path: '', redirectTo: 'add-offer' },
+  { path: 'add-offer', component: AddOffersWantedComponent },
   { path: 'add-event', component: AddEventsComponent },
 ];
 
