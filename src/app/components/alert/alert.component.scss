@@ -35,7 +35,8 @@
 
   .close {
     width: 1rem;
-      cursor: pointer;
+    pointer-events: all;
+    cursor: pointer;
   }
 
   .message-div{

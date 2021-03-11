@@ -1,0 +1,43 @@
+
+<div class="center-flex">
+        <h2>Register</h2>
+        <form [formGroup]="form" (submit)="onSubmit()" class="form-container">
+
+            <mat-form-field>
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="name" required>
+                <mat-error *ngIf="form.controls.name.invalid">
+                    {{ getControlError(form.controls.name) }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>E-mail address</mat-label>
+                <input matInput formControlName="email" required>
+                <mat-error *ngIf="form.controls.email.invalid">
+                    {{ getControlError(form.controls.email) }}
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Password</mat-label>
+                <input matInput formControlName="password"  type="password" required>
+                <mat-hint>Password must be at least 8 characters long</mat-hint>
+                <mat-error *ngIf="form.controls.password.invalid">
+                    {{ getControlError(form.controls.password) }}
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Confirm Password</mat-label>
+                <input matInput formControlName="confirmPassword" type="password" required [errorStateMatcher]="errorStateMatcher">
+                <mat-error *ngIf="form.hasError('notSame')">
+                    Passwords must be the same
+                </mat-error>
+            </mat-form-field>
+            <div class="footer">
+                <button mat-raised-button color="primary"type="submit" [disabled]="!form.valid">Register</button>
+                <a mat-button color="secondary" routerLink="../login">Cancel</a>
+            </div>
+        </form>
+</div>
+  

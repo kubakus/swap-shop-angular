@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { OffersService } from 'src/app/services/offers.service';
 import { WantedService } from 'src/app/services/wanted.service';
-import { capitalize } from 'src/app/shared/helpers';
+import { getControlMessage } from 'src/app/shared/helpers';
 import { Alerts } from 'src/app/shared/models/alerts';
 import { Base } from 'src/app/shared/models/base';
 import { SelectItem } from 'src/app/shared/models/select-types';
@@ -59,11 +59,8 @@ export class AddOffersWantedComponent implements OnInit {
     });
   }
 
-  public getRequiredErrorMessage(name: string): string | undefined {
-    if (this.form.controls[name]?.hasError('required')) {
-      return `${capitalize(name)} is required`;
-    }
-    return undefined;
+  public getControlError(control: AbstractControl): string | undefined {
+    return getControlMessage(control);
   }
 
   public ngOnInit(): void {

@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from 'src/app/material.module';
 
 import { UsersPagesRoutingModule } from './users-pages-routing.module';
-import { AddOffersWantedComponent } from './add-offers-wanted/add-offers-wanted.component';
+import { AddOffersWantedComponent } from './components/add-offers-wanted/add-offers-wanted.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { AddEventsComponent } from './add-events/add-events.component';
+import { AddEventsComponent } from './components/add-events/add-events.component';
 
 @NgModule({
   declarations: [AddOffersWantedComponent, AddEventsComponent],

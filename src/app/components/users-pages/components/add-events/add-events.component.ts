@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { take } from 'rxjs/operators';
 import { AlertService } from 'src/app/services/alert.service';
 import { EventsService } from 'src/app/services/events.service';
-import { capitalize } from 'src/app/shared/helpers';
+import { getControlMessage } from 'src/app/shared/helpers';
 import { Alerts } from 'src/app/shared/models/alerts';
 import { SwapShopServices } from 'src/app/shared/models/swap-shop-services';
 
@@ -36,11 +36,9 @@ export class AddEventsComponent {
     this.eventsService = eventsService;
     this.alertService = alertService;
   }
-  public getRequiredErrorMessage(name: string): string | undefined {
-    if (this.form.controls[name]?.hasError('required')) {
-      return `${capitalize(name)} is required`;
-    }
-    return undefined;
+
+  public getControlError(control: AbstractControl): string | undefined {
+    return getControlMessage(control);
   }
 
   public onSubmit(): void {

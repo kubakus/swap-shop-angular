@@ -1,8 +1,7 @@
-<div class="container">
-    <div class="login-card">
-        <h3>Login</h3>
+<div class="center-flex">
+    <h2>Login</h2>
     <form [formGroup]="form" class="form-container" (submit)="onSubmit()">
-        <mat-form-field class="field">
+        <mat-form-field>
             <mat-label>E-Mail Address</mat-label>
             <input matInput formControlName="email" type="text" required>
         </mat-form-field>
@@ -12,8 +11,7 @@
         </mat-form-field>
         <div class="footer">
             <button mat-raised-button color="primary" type="submit">Login</button>
-            <a mat-button color="secondary">Forgot you password?</a>
+            <a mat-button color="secondary" routerLink="">Forgot your password?</a>
         </div>
     </form>
-</div>
 </div>
