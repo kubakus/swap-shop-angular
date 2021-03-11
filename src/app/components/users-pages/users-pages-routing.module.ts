@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AddEventsComponent } from './add-events/add-events.component';
-import { AddOffersWantedComponent } from './add-offers-wanted/add-offers-wanted.component';
+import { AddEventsComponent } from './components/add-events/add-events.component';
+import { AddOffersWantedComponent } from './components/add-offers-wanted/add-offers-wanted.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'add-offer' },

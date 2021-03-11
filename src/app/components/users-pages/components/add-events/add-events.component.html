@@ -7,7 +7,7 @@
                 <mat-label>Event Name</mat-label>
                 <input matInput formControlName="eventName" maxlength="50" type="text">
                 <mat-hint align="end">{{ form.controls.eventName.value && form.controls.eventName.value.length || 0 }}/50</mat-hint>
-                <mat-error *ngIf="form.controls.eventName.invalid">{{ getRequiredErrorMessage('eventName') }}</mat-error>
+                <mat-error *ngIf="form.controls.eventName.invalid">{{ getControlError(form.controls.eventName) }}</mat-error>
             </mat-form-field>
             <!-- when -->
             <mat-form-field>
@@ -18,19 +18,19 @@
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
                 <mat-hint>Date cannot be earlier than {{ dayAfterNextSubsOut.toUTCString() }}</mat-hint>
-                <mat-error *ngIf="form.controls.when.invalid">{{ getRequiredErrorMessage('when') }}</mat-error>
+                <mat-error *ngIf="form.controls.when.invalid">{{ getControlError(form.controls.when) }}</mat-error>
             </mat-form-field>
             <!-- info -->
             <mat-form-field>
                 <mat-label>Info</mat-label>
                 <textarea matInput formControlName="info"></textarea>
-                <mat-error *ngIf="form.controls.info.invalid">{{ getRequiredErrorMessage('info') }}</mat-error>
+                <mat-error *ngIf="form.controls.info.invalid">{{ getControlError(form.controls.info) }}</mat-error>
             </mat-form-field>
             <!-- contact -->
             <mat-form-field>
                 <mat-label>Contact Information</mat-label>
                 <input matInput formControlName="contactInfo" type="text">
-                <mat-error *ngIf="form.controls.contactInfo.invalid">{{ getRequiredErrorMessage('contactInfo') }}</mat-error>
+                <mat-error *ngIf="form.controls.contactInfo.invalid">{{ getControlError(form.controls.contactInfo) }}</mat-error>
             </mat-form-field>
             <div class="center-flex">
                 <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid">Submit</button>
