@@ -1,0 +1,21 @@
+<nav class="main-navbar">
+    <div class="nav-link logo">
+      <a routerLink="/">SwapShop</a>
+    </div>
+    <div class="nav-links">
+      <ng-container *ngIf="isLoggedIn | async">
+      <div class="nav-link">
+        <a routerLink="/add-offer">Add Offer</a>
+      </div>
+      <div class="nav-link">
+        <a routerLink="/add-event">Add Event</a>
+      </div>
+      <div class="nav-link">
+        <button mat-button [matMenuTriggerFor]="settingsMenu">Settings</button>
+        <mat-menu #settingsMenu="matMenu">
+          <a mat-menu-item (click)="logout()">Logout</a>
+        </mat-menu>
+      </div>
+    </ng-container>
+    </div>
+  </nav>

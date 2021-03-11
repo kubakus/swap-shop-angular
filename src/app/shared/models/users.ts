@@ -14,6 +14,5 @@ export namespace Users {
 
   export interface TokenResponse {
     token: string;
-    expiresIn: string;
   }
 }
