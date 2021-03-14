@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
@@ -10,6 +10,8 @@ import { MaterialModule } from './material.module';
 import { AuthInterceptor } from './services/authInterceptor.service';
 import { AlertComponent } from './components/alert/alert.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { appInitializer } from './providers/app.initializer';
+import { AuthService } from './services/auth.service';
 @NgModule({
   declarations: [AppComponent, AlertComponent, NavbarComponent],
   imports: [
@@ -20,7 +22,10 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     NoopAnimationsModule,
     MaterialModule,
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }],
+  providers: [
+    { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthService] },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
