@@ -1,4 +1,5 @@
 import { Base } from './base';
+import { Roles } from './roles';
 
 export namespace Users {
   export interface LoginDetails {
@@ -10,7 +11,11 @@ export namespace Users {
     name: string;
   }
 
-  export interface User extends CreateRequest, Base.Record {}
+  export interface User extends Base.Record {
+    email: string;
+    roles: Roles.Type[];
+    isVerified: boolean;
+  }
 
   export interface TokenResponse {
     token: string;

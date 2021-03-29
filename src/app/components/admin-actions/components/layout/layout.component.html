@@ -1,0 +1,37 @@
+<div class="container">
+<h1>Review Panel</h1>
+
+<div class="content">
+    <div class="section">
+        <h2>Awaiting Review</h2>
+        <div class="first-left-rest-right action-row">
+                <mat-checkbox
+                    [checked]="!!checkAll"
+                    (change)="setAll($event.checked)"
+                    [indeterminate]="someChildrenCheck"
+                >   
+                Select All
+                </mat-checkbox>
+                <div class="buttons-row" *ngIf="someChildrenCheck || checkAll">
+                    <button mat-raised-button color="primary" (click)="changeState(true)">Reject</button>
+                    <button mat-raised-button color="primary" (click)="changeState()">Approve</button>
+                </div>
+                
+        </div>
+        <div class="list">
+        <mat-accordion >
+            <ng-container *ngIf="offers && wants && events">
+                    <app-item-panel [items]="offers" [panelSettings]="offerFields" (checkSomeChange)="someOffersChecked = $event; updateSomeChildrenChecked()"></app-item-panel>
+                    <app-item-panel [items]="wants" [panelSettings]="wantFields" (checkSomeChange)="someWantsChecked = $event; updateSomeChildrenChecked()"></app-item-panel>
+                    <app-item-panel [items]="events" [panelSettings]="eventsFields" (checkSomeChange)="someEventsChecked = $event; updateSomeChildrenChecked()"></app-item-panel>
+        </ng-container>
+        </mat-accordion>
+    </div>
+    </div>
+    <div class="section">
+        review
+    </div>
+</div>
+
+</div>
+

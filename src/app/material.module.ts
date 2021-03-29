@@ -8,6 +8,12 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatTreeModule } from '@angular/material/tree';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+
 const modules = [
   MatFormFieldModule,
   MatInputModule,
@@ -18,6 +24,11 @@ const modules = [
   MatNativeDateModule,
   MatIconModule,
   MatMenuModule,
+  MatTreeModule,
+  MatExpansionModule,
+  MatDividerModule,
+  MatCheckboxModule,
+  FormsModule,
 ];
 
 @NgModule({
