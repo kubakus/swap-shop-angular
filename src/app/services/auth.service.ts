@@ -12,7 +12,7 @@ const ROOT_ROUTE = 'api/auth';
 export interface TokenPayload {
   iat: number;
   sub: string;
-  role: Roles.Type;
+  roles: Roles.Type[];
   exp: number;
 }
 
@@ -24,21 +24,43 @@ export class AuthService {
   // eslint-disable-next-line no-undef
   private refreshTokenTimeout?: NodeJS.Timeout;
 
-  private tokenSubject: BehaviorSubject<string | null>;
+  private tokenSubject: BehaviorSubject<string | undefined>;
   // private userSubject?: BehaviorSubject<Users.User>;
+  private rolesSubject: BehaviorSubject<Roles.Type[] | undefined>;
+  private usersLookupSubject?: BehaviorSubject<Users.User[]>;
 
   private constructor(httpClient: HttpClient, router: Router) {
     this.httpClient = httpClient;
     this.router = router;
 
-    this.tokenSubject = new BehaviorSubject<string | null>(null);
+    this.tokenSubject = new BehaviorSubject<string | undefined>(undefined);
+    // Swap it all to userSubject using /me endpoint
+    this.rolesSubject = new BehaviorSubject<Roles.Type[] | undefined>(undefined);
+    // this.usersLookupSubject?: BehaviorSubject<Users.User[]>;
   }
 
-  public get token(): string | null {
+  public get token(): string | undefined {
     return this.tokenSubject.getValue();
   }
 
-  public get isLoggedInn(): Observable<boolean> {
+  public get users(): Observable<Users.User[]> {
+    if (!this.canAccess(Roles.Type.ADMIN)) {
+      return of([]);
+    }
+    if (!this.usersLookupSubject) {
+      return this.httpClient.get<Users.User[]>(`${ROOT_ROUTE}`);
+    }
+    return this.usersLookupSubject.asObservable();
+  }
+
+  public canAccess(role: Roles.Type): boolean {
+    if (!this.rolesSubject) {
+      return false;
+    }
+    return Boolean(this.rolesSubject.getValue()?.includes(role));
+  }
+
+  public get isLoggedIn(): Observable<boolean> {
     if (!this.tokenSubject) {
       return of(false);
     }
@@ -56,7 +78,8 @@ export class AuthService {
 
   public logout(): void {
     this.httpClient.post<void>(`${ROOT_ROUTE}/revoke-token`, {}).pipe(take(1)).subscribe();
-    this.tokenSubject.next(null);
+    this.tokenSubject.next(undefined);
+    this.rolesSubject.next(undefined);
     this.router.navigate(['/account/login']);
     this.stopRefreshTokenTimer();
   }
@@ -73,6 +96,7 @@ export class AuthService {
     return this.httpClient.post<Users.TokenResponse>(`${ROOT_ROUTE}/authenticate`, details).pipe(
       map((res) => {
         this.tokenSubject.next(res.token);
+        this.rolesSubject.next(this.getRoles(res.token));
         this.startRefreshTokenTimer();
       }),
       shareReplay(),
@@ -83,6 +107,7 @@ export class AuthService {
     return this.httpClient.post<Users.TokenResponse>(`${ROOT_ROUTE}/refresh-token`, {}).pipe(
       tap((token) => {
         this.tokenSubject.next(token.token);
+        this.rolesSubject.next(this.getRoles(token.token));
         this.startRefreshTokenTimer();
       }),
     );
@@ -111,5 +136,10 @@ export class AuthService {
 
   private getExpireTime(exp: number): Date {
     return new Date(exp * 1000);
+  }
+
+  private getRoles(token: string): Roles.Type[] {
+    const decoded = jwtDecode<TokenPayload>(token);
+    return decoded.roles;
   }
 }

@@ -10,11 +10,11 @@ import { getControlMessage } from 'src/app/shared/helpers';
 import { Alerts } from 'src/app/shared/models/alerts';
 import { Base } from 'src/app/shared/models/base';
 import { SelectItem } from 'src/app/shared/models/select-types';
-import { SwapShopServices } from 'src/app/shared/models/swap-shop-services';
+import { Items } from 'src/app/shared/models/items';
 
 const types: SelectItem[] = [
-  { name: SwapShopServices.Type.OFFER, displayName: 'Offered' },
-  { name: SwapShopServices.Type.WANTED, displayName: 'Wanted' },
+  { name: Items.Type.OFFERED, displayName: 'Offered' },
+  { name: Items.Type.WANTED, displayName: 'Wanted' },
 ];
 
 @Component({
@@ -25,7 +25,7 @@ const types: SelectItem[] = [
 export class AddOffersWantedComponent implements OnInit {
   public form: FormGroup;
   public types = types;
-  public selectedType?: SwapShopServices.Type;
+  public selectedType?: Items.Type;
   public typeControl: FormControl;
 
   private authService: AuthService;
@@ -76,14 +76,14 @@ export class AddOffersWantedComponent implements OnInit {
   }
 
   public onSubmit(): void {
-    const type = this.form.value.type as SwapShopServices.Type;
+    const type = this.form.value.type as Items.Type;
     if (!type) {
       console.error('Trying to submit a form without a type of service');
       return;
     }
     let createObs: Observable<Base.CreateResponse>;
 
-    const request: SwapShopServices.MaterialServiceCreateRequest = {
+    const request: Items.MaterialServiceCreateRequest = {
       name: this.form.value.name,
       info: this.form.value.info,
       deal: this.form.value.deal,
@@ -94,17 +94,17 @@ export class AddOffersWantedComponent implements OnInit {
     let errorMessage: string;
 
     switch (type) {
-      case SwapShopServices.Type.OFFER:
+      case Items.Type.OFFERED:
         createObs = this.offersService.createOffer(request);
-        successMessage = 'Offer has been submitted';
-        errorMessage = 'Failed to submit new offer';
+        successMessage = 'Offered item has been submitted';
+        errorMessage = 'Failed to submit new offered item';
         break;
-      case SwapShopServices.Type.WANTED:
+      case Items.Type.WANTED:
         createObs = this.wantedService.createWanted(request);
-        successMessage = 'Wanted offer has been submitted';
-        errorMessage = 'Failed to create wanted offer';
+        successMessage = 'Wanted item has been submitted';
+        errorMessage = 'Failed to create wanted offer item';
         break;
-      case SwapShopServices.Type.EVENT:
+      case Items.Type.EVENT:
       default:
         console.error('Unknown type of service', type);
         return;

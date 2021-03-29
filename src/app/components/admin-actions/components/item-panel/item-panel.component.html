@@ -1,0 +1,24 @@
+<mat-expansion-panel [togglePosition]="'before'" *ngFor="let item of items">
+
+    <mat-expansion-panel-header>
+
+        <mat-panel-title>
+            <mat-checkbox 
+                (click)="$event.stopPropagation()" 
+                [ngModel]="item.selected"
+                (ngModelChange)="updateCheck($event, item)"></mat-checkbox>
+            <mat-divider  vertical="true" class="divader"></mat-divider>
+            <div>{{ panelSettings.title.displayName || panelSettings.title.name }}: {{ item[panelSettings.title.name] }}</div>
+        </mat-panel-title>
+        <mat-panel-description>
+            {{ panelSettings.description.displayName || panelSettings.description.name }}: {{ item[panelSettings.description.name]}}
+        </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="panel-content">
+        <div class="panel-section" *ngFor="let contentField of panelSettings.content">
+            <h3>{{ contentField.displayName || contentField.name }}</h3>
+            <p>{{ item[contentField.name] }}</p>
+            <mat-divider></mat-divider>
+        </div>
+    </div>
+</mat-expansion-panel>

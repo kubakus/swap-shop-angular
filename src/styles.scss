@@ -11,10 +11,16 @@ https://coolors.co/87a878-b0bc98-c7ccb9-cae2bc-dbf9b8
 #CAE2BC tea green 
 #DBF9B8 tea green (fresher)
 */
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body { height: 100% !important; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;}
 * {
     flex: 0 1 auto;
+    box-sizing: border-box;
+}
+
+
+h1 {
+    font-size: 2rem !important;
 }
 
 .center-flex {
@@ -33,5 +39,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     width: 30rem;
     & > :not(:last-child) {
         margin-bottom: 1rem;
+    }
+}
+
+.first-left-rest-right {
+    // display: flex;
+    // flex-direction: row;
+    & > :first-child {
+        margin-right: auto;
     }
 }

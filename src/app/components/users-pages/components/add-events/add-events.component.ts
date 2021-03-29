@@ -5,7 +5,7 @@ import { AlertService } from 'src/app/services/alert.service';
 import { EventsService } from 'src/app/services/events.service';
 import { getControlMessage } from 'src/app/shared/helpers';
 import { Alerts } from 'src/app/shared/models/alerts';
-import { SwapShopServices } from 'src/app/shared/models/swap-shop-services';
+import { Items } from 'src/app/shared/models/items';
 
 // Sunday is equal to 0;
 // Currently Monday
@@ -42,7 +42,7 @@ export class AddEventsComponent {
   }
 
   public onSubmit(): void {
-    const request: SwapShopServices.EventCreateRequest = {
+    const request: Items.EventCreateRequest = {
       eventName: this.form.value.eventName,
       when: this.form.value.when,
       info: this.form.value.info,
