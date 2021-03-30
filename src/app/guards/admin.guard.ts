@@ -25,8 +25,7 @@ export class AdminGuard implements CanActivate {
     _route: ActivatedRouteSnapshot,
     _state: RouterStateSnapshot,
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const canAccess = this.authService.canAccess(Roles.Type.ADMIN);
-    console.log('can ', canAccess);
+    const canAccess = this.authService.hasRole(Roles.Type.ADMIN);
     const homePath = this.router.parseUrl('/');
     return canAccess || homePath;
   }

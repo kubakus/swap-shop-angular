@@ -5,6 +5,10 @@ import { LayoutComponent } from './components/layout/layout.component';
 const routes: Routes = [
   {
     path: '',
+    redirectTo: 'review',
+  },
+  {
+    path: 'review',
     component: LayoutComponent,
   },
 ];

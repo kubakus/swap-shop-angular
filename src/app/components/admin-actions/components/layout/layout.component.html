@@ -29,7 +29,17 @@
     </div>
     </div>
     <div class="section">
-        review
+        <h2>Reviewed</h2>
+        <div class="list empty" >
+            <ng-container *ngIf="reviewedOffers && reviewedWants && reviewedEvents">
+                <mat-accordion>
+                    <app-item-panel [items]="reviewedOffers" [panelSettings]="reviewedOffersFields"></app-item-panel>
+                    <app-item-panel [items]="reviewedWants" [panelSettings]="reviewedWantFields"></app-item-panel>
+                    <app-item-panel [items]="reviewedEvents" [panelSettings]="reviewedEventsFields"></app-item-panel>
+                </mat-accordion>
+            </ng-container>
+            
+        </div>
     </div>
 </div>
 

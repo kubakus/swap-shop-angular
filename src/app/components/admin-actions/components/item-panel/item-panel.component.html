@@ -3,15 +3,18 @@
     <mat-expansion-panel-header>
 
         <mat-panel-title>
+            <ng-container *ngIf="panelSettings.showCheckBox">
             <mat-checkbox 
                 (click)="$event.stopPropagation()" 
                 [ngModel]="item.selected"
                 (ngModelChange)="updateCheck($event, item)"></mat-checkbox>
             <mat-divider  vertical="true" class="divader"></mat-divider>
+        </ng-container>
             <div>{{ panelSettings.title.displayName || panelSettings.title.name }}: {{ item[panelSettings.title.name] }}</div>
         </mat-panel-title>
         <mat-panel-description>
-            {{ panelSettings.description.displayName || panelSettings.description.name }}: {{ item[panelSettings.description.name]}}
+            <div>{{ panelSettings.description.displayName || panelSettings.description.name }}: {{ item[panelSettings.description.name]}}</div>
+            <div *ngIf="panelSettings.status">{{ panelSettings.status.displayName || panelSettings.status.name }}: {{ item[panelSettings.status.name] }}</div>
         </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="panel-content">
