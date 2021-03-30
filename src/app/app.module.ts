@@ -13,6 +13,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { appInitializer } from './providers/app.initializer';
 import { AuthService } from './services/auth.service';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
   declarations: [AppComponent, AlertComponent, NavbarComponent],
   imports: [
@@ -22,6 +23,7 @@ import { ErrorInterceptor } from './interceptors/error.interceptor';
     HttpClientModule,
     NoopAnimationsModule,
     MaterialModule,
+    BrowserAnimationsModule,
   ],
   providers: [
     { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthService] },

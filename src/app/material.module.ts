@@ -13,6 +13,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 const modules = [
   MatFormFieldModule,
@@ -29,6 +30,7 @@ const modules = [
   MatDividerModule,
   MatCheckboxModule,
   FormsModule,
+  MatProgressSpinnerModule,
 ];
 
 @NgModule({
