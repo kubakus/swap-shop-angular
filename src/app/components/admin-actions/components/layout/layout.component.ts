@@ -1,13 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { OffersService } from 'src/app/services/offers.service';
 import { Items } from 'src/app/shared/models/items';
-import { forkJoin, Observable, of, Subscription } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { WantedService } from 'src/app/services/wanted.service';
 import { Panel, PanelItem } from '../item-panel/item-panel.component';
 import { EventsService } from 'src/app/services/events.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { ItemState } from 'src/app/shared/models/item-state';
-import { catchError, switchMap, take } from 'rxjs/operators';
+import { catchError, map, switchMap, take } from 'rxjs/operators';
 import { Base } from 'src/app/shared/models/base';
 import { Alerts } from 'src/app/shared/models/alerts';
 
@@ -16,10 +16,14 @@ import { Alerts } from 'src/app/shared/models/alerts';
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
 })
-export class LayoutComponent implements OnInit, OnDestroy {
+export class LayoutComponent implements OnInit {
   public offers?: PanelItem<Items.Offer>[];
   public wants?: PanelItem<Items.Wanted>[];
   public events?: PanelItem<Items.Event>[];
+
+  public reviewedOffers?: PanelItem<Items.Offer>[];
+  public reviewedWants?: PanelItem<Items.Wanted>[];
+  public reviewedEvents?: PanelItem<Items.Event>[];
   public checkAll?: boolean;
   public someChildrenCheck?: boolean;
 
@@ -27,7 +31,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
   public someWantsChecked?: boolean;
   public someEventsChecked?: boolean;
 
-  public offerFields: Panel<Items.Offer> = {
+  private baseOfferFields: Panel<Items.Offer> = {
     title: { name: 'item', displayName: 'Offered' },
     description: { name: 'email', displayName: 'By' },
     content: [
@@ -37,12 +41,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
     ],
   };
 
-  public wantFields: Panel<Items.Wanted> = {
-    ...this.offerFields,
-    title: { name: 'item', displayName: 'Wanted' },
-  };
-
-  public eventsFields: Panel<Items.Event> = {
+  private baseEventFields: Panel<Items.Event> = {
     title: { name: 'eventName', displayName: 'Event' },
     description: { name: 'createdBy', displayName: 'By' },
     content: [
@@ -52,7 +51,35 @@ export class LayoutComponent implements OnInit, OnDestroy {
     ],
   };
 
-  private subscriptions: Subscription[] = [];
+  public reviewedOffersFields: Panel<Items.Offer> = {
+    ...this.baseOfferFields,
+    status: { name: 'state', displayName: 'Status' },
+  };
+
+  public offerFields: Panel<Items.Offer> = {
+    ...this.baseOfferFields,
+    showCheckBox: true,
+  };
+
+  public reviewedWantFields: Panel<Items.Wanted> = {
+    ...this.reviewedOffersFields,
+    title: { name: 'item', displayName: 'Wanted' },
+  };
+
+  public wantFields: Panel<Items.Wanted> = {
+    ...this.offerFields,
+    title: { name: 'item', displayName: 'Wanted' },
+  };
+
+  public reviewedEventsFields: Panel<Items.Event> = {
+    ...this.baseEventFields,
+    status: { name: 'state', displayName: 'Status' },
+  };
+
+  public eventsFields: Panel<Items.Event> = {
+    ...this.baseEventFields,
+    showCheckBox: true,
+  };
 
   private offersService: OffersService;
   private wantedService: WantedService;
@@ -73,7 +100,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.fetchData([ItemState.AWAITING_REVIEW]).subscribe({
+    this.fetchAll().subscribe({
       error: (err) => {
         this.alertService.show({
           type: 'error',
@@ -82,14 +109,6 @@ export class LayoutComponent implements OnInit, OnDestroy {
           console.error('Failed to fetch items to review', err);
       },
     });
-  }
-
-  public ngOnDestroy(): void {
-    for (const subscription of this.subscriptions) {
-      subscription.unsubscribe();
-    }
-
-    this.subscriptions = [];
   }
 
   public setAll(isChecked: boolean): void {
@@ -164,7 +183,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
         }),
         switchMap((_res) => {
           this.setAll(false);
-          return this.fetchData([ItemState.AWAITING_REVIEW]);
+          return this.fetchAll();
         }),
       )
       .subscribe({
@@ -211,18 +230,29 @@ export class LayoutComponent implements OnInit, OnDestroy {
       : of(undefined);
   }
 
-  private fetchData(states: ItemState[]) {
+  private fetchAll(): Observable<void> {
+    return forkJoin([
+      this.fetchData([ItemState.AWAITING_REVIEW]),
+      this.fetchData([ItemState.APPROVED, ItemState.REJECTED]),
+    ]).pipe(
+      map(([[offers, wants, events], [reviewedOffers, reviewedWants, reviewedEvents]]) => {
+        this.offers = offers;
+        this.wants = wants;
+        this.events = events;
+        this.reviewedOffers = reviewedOffers;
+        this.reviewedWants = reviewedWants;
+        this.reviewedEvents = reviewedEvents;
+      }),
+    );
+  }
+
+  private fetchData(
+    states: ItemState[],
+  ): Observable<[Items.Offer[], Items.Wanted[], Items.Event[]]> {
     return forkJoin([
       this.offersService.getOffers({ state: states }).pipe(take(1)),
       this.wantedService.getWanted({ state: states }).pipe(take(1)),
       this.eventsService.getEvents({ state: states }).pipe(take(1)),
-    ]).pipe(
-      switchMap(([offers, wants, events]) => {
-        this.offers = offers;
-        this.wants = wants;
-        this.events = events;
-        return of();
-      }),
-    );
+    ]);
   }
 }

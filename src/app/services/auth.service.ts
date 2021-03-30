@@ -44,7 +44,7 @@ export class AuthService {
   }
 
   public get users(): Observable<Users.User[]> {
-    if (!this.canAccess(Roles.Type.ADMIN)) {
+    if (!this.hasRole(Roles.Type.ADMIN)) {
       return of([]);
     }
     if (!this.usersLookupSubject) {
@@ -53,7 +53,7 @@ export class AuthService {
     return this.usersLookupSubject.asObservable();
   }
 
-  public canAccess(role: Roles.Type): boolean {
+  public hasRole(role: Roles.Type): boolean {
     if (!this.rolesSubject) {
       return false;
     }

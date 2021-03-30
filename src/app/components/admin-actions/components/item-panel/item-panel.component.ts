@@ -5,8 +5,10 @@ export type PanelItem<T = any> = T & {
 };
 
 export interface Panel<T = any> {
+  showCheckBox?: boolean;
   title: Cell<T>;
   description: Cell<T>;
+  status?: Cell<T>;
   content: Cell<T>[];
 }
 
