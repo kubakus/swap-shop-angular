@@ -14,8 +14,10 @@ import { appInitializer } from './providers/app.initializer';
 import { AuthService } from './services/auth.service';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
 @NgModule({
-  declarations: [AppComponent, AlertComponent, NavbarComponent],
+  declarations: [AppComponent, AlertComponent, NavbarComponent, LoginComponent, RegisterComponent],
   imports: [
     BrowserModule,
     ReactiveFormsModule,

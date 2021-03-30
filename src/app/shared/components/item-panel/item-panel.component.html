@@ -14,7 +14,8 @@
         </mat-panel-title>
         <mat-panel-description>
             <div>{{ panelSettings.description.displayName || panelSettings.description.name }}: {{ item[panelSettings.description.name]}}</div>
-            <div *ngIf="panelSettings.status">{{ panelSettings.status.displayName || panelSettings.status.name }}: {{ item[panelSettings.status.name] }}</div>
+            <!-- ?. to make compiler happy -->
+            <div *ngIf="panelSettings.status">{{ panelSettings.status?.displayName || panelSettings.status?.name }}: {{ item[panelSettings.status!.name] }}</div>
         </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="panel-content">

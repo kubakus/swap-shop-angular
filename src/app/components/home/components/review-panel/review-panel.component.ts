@@ -3,7 +3,7 @@ import { OffersService } from 'src/app/services/offers.service';
 import { Items } from 'src/app/shared/models/items';
 import { forkJoin, Observable, of } from 'rxjs';
 import { WantedService } from 'src/app/services/wanted.service';
-import { Panel, PanelItem } from '../item-panel/item-panel.component';
+import { Panel, PanelItem } from '../../../../shared/components/item-panel/item-panel.component';
 import { EventsService } from 'src/app/services/events.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { ItemState } from 'src/app/shared/models/item-state';
@@ -12,11 +12,11 @@ import { Base } from 'src/app/shared/models/base';
 import { Alerts } from 'src/app/shared/models/alerts';
 
 @Component({
-  selector: 'app-layout',
-  templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.scss'],
+  selector: 'app-review-panel',
+  templateUrl: './review-panel.component.html',
+  styleUrls: ['./review-panel.component.scss'],
 })
-export class LayoutComponent implements OnInit {
+export class ReviewPanelComponent implements OnInit {
   public offers?: PanelItem<Items.Offer>[];
   public wants?: PanelItem<Items.Wanted>[];
   public events?: PanelItem<Items.Event>[];

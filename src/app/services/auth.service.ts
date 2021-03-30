@@ -80,7 +80,7 @@ export class AuthService {
     this.httpClient.post<void>(`${ROOT_ROUTE}/revoke-token`, {}).pipe(take(1)).subscribe();
     this.tokenSubject.next(undefined);
     this.rolesSubject.next(undefined);
-    this.router.navigate(['/account/login']);
+    this.router.navigate(['/login']);
     this.stopRefreshTokenTimer();
   }
 

@@ -2,19 +2,22 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from 'src/app/material.module';
 
-import { UsersPagesRoutingModule } from './users-pages-routing.module';
+import { HomeRoutingModule } from './home-routing.module';
 import { AddOffersWantedComponent } from './components/add-offers-wanted/add-offers-wanted.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AddEventsComponent } from './components/add-events/add-events.component';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { ReviewPanelComponent } from './components/review-panel/review-panel.component';
 
 @NgModule({
-  declarations: [AddOffersWantedComponent, AddEventsComponent],
+  declarations: [AddOffersWantedComponent, AddEventsComponent, ReviewPanelComponent],
   imports: [
     CommonModule,
-    UsersPagesRoutingModule,
-    MaterialModule,
+    HomeRoutingModule,
     ReactiveFormsModule,
+    MaterialModule,
     FormsModule,
+    SharedModule
   ],
 })
 export class HomeModule {}
