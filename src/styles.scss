@@ -1,6 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
 
-
 /*
 potential colours:
 https://coolors.co/87a878-b0bc98-c7ccb9-cae2bc-dbf9b8
@@ -36,16 +35,19 @@ h1 {
     margin-bottom: 2rem;
     display: flex;
     flex-direction: column;
-    width: 30rem;
+    min-width: 40rem;
     & > :not(:last-child) {
         margin-bottom: 1rem;
     }
 }
 
 .first-left-rest-right {
-    // display: flex;
-    // flex-direction: row;
     & > :first-child {
         margin-right: auto;
     }
+}
+
+.align-left {
+    display: flex;
+    align-items: flex-start;
 }

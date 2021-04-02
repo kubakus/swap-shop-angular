@@ -42,9 +42,9 @@ export namespace Items {
   }
 
   export interface MaterialServiceCreateRequest {
-    name: string;
+    userName: string;
     info: string;
-    item: string;
+    itemName: string;
     deal: string;
     email: string;
   }
@@ -55,8 +55,8 @@ export namespace Items {
       Base.AuditInfo,
       State {}
   export interface MaterialServiceRequest {
-    name?: Filters.StringFilter;
-    item?: Filters.StringFilter;
+    userName?: Filters.StringFilter;
+    itemName?: Filters.StringFilter;
     email?: Filters.StringFilter;
     state?: Filters.StringFilter<ItemState>;
   }

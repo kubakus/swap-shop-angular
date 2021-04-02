@@ -4,10 +4,10 @@ export function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-export function getControlMessage(control: AbstractControl): string | undefined {
+export function getControlMessage(control: AbstractControl): string {
   const errors = control.errors;
   if (!errors) {
-    return undefined;
+    throw new Error('Control does not have any errors');
   }
   if (errors['required']) {
     return `This field is required`;

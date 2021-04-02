@@ -16,6 +16,11 @@ import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
+import {
+  NgxMatDatetimePickerModule,
+  NgxMatTimepickerModule,
+} from '@angular-material-components/datetime-picker';
+
 @NgModule({
   declarations: [AppComponent, AlertComponent, NavbarComponent, LoginComponent, RegisterComponent],
   imports: [
@@ -26,6 +31,8 @@ import { RegisterComponent } from './components/register/register.component';
     NoopAnimationsModule,
     MaterialModule,
     BrowserAnimationsModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule,
   ],
   providers: [
     { provide: APP_INITIALIZER, useFactory: appInitializer, multi: true, deps: [AuthService] },

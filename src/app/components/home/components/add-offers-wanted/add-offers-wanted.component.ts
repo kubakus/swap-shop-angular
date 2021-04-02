@@ -48,18 +48,18 @@ export class AddOffersWantedComponent implements OnInit {
     this.typeControl = new FormControl(undefined, Validators.required);
     this.form = new FormGroup({
       type: this.typeControl,
-      item: new FormControl(undefined, Validators.required),
+      itemName: new FormControl(undefined, Validators.required),
       info: new FormControl(undefined, Validators.required),
       deal: new FormControl(undefined, Validators.required),
       email: new FormControl(
         undefined,
         Validators.compose([Validators.required, Validators.email]),
       ),
-      name: new FormControl(undefined, Validators.required),
+      userName: new FormControl(undefined, Validators.required),
     });
   }
 
-  public getControlError(control: AbstractControl): string | undefined {
+  public getControlError(control: AbstractControl): string {
     return getControlMessage(control);
   }
 
@@ -84,10 +84,10 @@ export class AddOffersWantedComponent implements OnInit {
     let createObs: Observable<Base.CreateResponse>;
 
     const request: Items.MaterialServiceCreateRequest = {
-      name: this.form.value.name,
+      userName: this.form.value.userName,
       info: this.form.value.info,
       deal: this.form.value.deal,
-      item: this.form.value.item,
+      itemName: this.form.value.itemName,
       email: this.form.value.email,
     };
     let successMessage: string;

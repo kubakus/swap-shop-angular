@@ -14,6 +14,7 @@
         <button mat-button [matMenuTriggerFor]="settingsMenu">Settings</button>
         <mat-menu #settingsMenu="matMenu">
           <a *ngIf="isAdmin" mat-menu-item routerLink="/review">Review Items</a>
+          <a *ngIf="isAdmin" mat-menu-item routerLink="/create">Create</a>
           <a mat-menu-item (click)="logout()">Logout</a>
         </mat-menu>
       </div>

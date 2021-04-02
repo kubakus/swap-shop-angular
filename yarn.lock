@@ -165,6 +165,20 @@
   dependencies:
     eslint-scope "^5.1.0"
 
+"@angular-material-components/datetime-picker@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@angular-material-components/datetime-picker/-/datetime-picker-5.1.0.tgz#ed32295fa2d3c076d0e7d4ac768993472f99de3d"
+  integrity sha512-SzxBG9oquHF4EWXgr0QStdMG9oR+aY0Uc5j/x0pq36NzqHWUkR+NgkwjSx6fEk0orQ751UMcgdM90525JO4OWQ==
+  dependencies:
+    tslib "^2.0.0"
+
+"@angular-material-components/moment-adapter@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@angular-material-components/moment-adapter/-/moment-adapter-5.0.0.tgz#e277b82a4a3554260cd274a1862edf64cc186cac"
+  integrity sha512-/9+8b4hpe8GwlgbuXAckDg5ZKms6yDWRKQcyXYuNKC+8Ya6M0M5NHYz3d4YXjJ73xOGURr73NlqZzYsknjYkUQ==
+  dependencies:
+    tslib "^2.0.0"
+
 "@angular/animations@~11.1.2":
   version "11.1.2"
   resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-11.1.2.tgz#df5d5284625e17a4b094a6cf8c420d3c5f187693"

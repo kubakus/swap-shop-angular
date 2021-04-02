@@ -1,8 +1,10 @@
+import { NGX_MAT_DATE_FORMATS } from '@angular-material-components/datetime-picker';
 import { Component } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { take } from 'rxjs/operators';
 import { AlertService } from 'src/app/services/alert.service';
 import { EventsService } from 'src/app/services/events.service';
+import { CUSTOM_MAT_DATE_FORMATS } from 'src/app/shared/datepicker-format';
 import { getControlMessage } from 'src/app/shared/helpers';
 import { Alerts } from 'src/app/shared/models/alerts';
 import { Items } from 'src/app/shared/models/items';
@@ -15,6 +17,7 @@ const SUBS_SEND_DAY = 1;
   selector: 'app-add-events',
   templateUrl: './add-events.component.html',
   styleUrls: ['./add-events.component.scss'],
+  providers: [{ provide: NGX_MAT_DATE_FORMATS, useValue: CUSTOM_MAT_DATE_FORMATS }],
 })
 export class AddEventsComponent {
   public form: FormGroup;
@@ -37,7 +40,7 @@ export class AddEventsComponent {
     this.alertService = alertService;
   }
 
-  public getControlError(control: AbstractControl): string | undefined {
+  public getControlError(control: AbstractControl): string {
     return getControlMessage(control);
   }
 

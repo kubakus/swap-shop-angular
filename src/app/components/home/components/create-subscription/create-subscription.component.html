@@ -1,0 +1,38 @@
+<div class="center-flex">
+    <h2>Create subscription</h2>
+    <form [formGroup]="form" class="form-container" (submit)="onSubmit()">            
+        <mat-form-field appearance="outline">
+            <mat-label>Date</mat-label>
+            <input matInput [ngxMatDatetimePicker]="picker" formControlName="date" readonly (click)="picker.open()" [min]="minDate"/>
+            <!-- small cheat because angular complains about types here when strict template check is enabled -->
+            <mat-datepicker-toggle matSuffix [for]="$any(picker)"></mat-datepicker-toggle>
+            <ngx-mat-datetime-picker #picker ></ngx-mat-datetime-picker>
+            <mat-error *ngIf="form.controls.date.invalid">{{ getControlError(form.controls.date) }}</mat-error>
+        </mat-form-field>
+        <mat-form-field class="wider" appearance="outline">
+            <mat-label>Header</mat-label>
+            <textarea
+                maxlength="500"
+                rows="15"
+                matInput
+                formControlName="header"
+              ></textarea>
+              <mat-hint align="end">{{ form.controls.header.value && form.controls.header.value.length || 0 }}/500</mat-hint>
+              <mat-error *ngIf="form.controls.header.invalid">{{ getControlError(form.controls.header) }}</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Footer</mat-label>
+            <textarea
+                maxlength="2500"
+                rows="20"
+                matInput
+                formControlName="footer"
+            ></textarea>
+            <mat-hint align="end">{{ form.controls.footer.value && form.controls.footer.value.length || 0 }}/2500</mat-hint>
+            <mat-error *ngIf="form.controls.footer.invalid">{{ getControlError(form.controls.footer) }}</mat-error>
+        </mat-form-field>
+        <div class="center-flex">
+            <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid">Submit</button>
+        </div>
+    </form>
+</div>

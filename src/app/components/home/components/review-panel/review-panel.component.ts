@@ -32,10 +32,10 @@ export class ReviewPanelComponent implements OnInit {
   public someEventsChecked?: boolean;
 
   private baseOfferFields: Panel<Items.Offer> = {
-    title: { name: 'item', displayName: 'Offered' },
+    title: { name: 'itemName', displayName: 'Offered' },
     description: { name: 'email', displayName: 'By' },
     content: [
-      { name: 'name', displayName: 'Contact Information' },
+      { name: 'userName', displayName: 'Contact Information' },
       { name: 'info', displayName: 'Info' },
       { name: 'deal', displayName: 'Deal' },
     ],
@@ -63,12 +63,12 @@ export class ReviewPanelComponent implements OnInit {
 
   public reviewedWantFields: Panel<Items.Wanted> = {
     ...this.reviewedOffersFields,
-    title: { name: 'item', displayName: 'Wanted' },
+    title: { name: 'itemName', displayName: 'Wanted' },
   };
 
   public wantFields: Panel<Items.Wanted> = {
     ...this.offerFields,
-    title: { name: 'item', displayName: 'Wanted' },
+    title: { name: 'itemName', displayName: 'Wanted' },
   };
 
   public reviewedEventsFields: Panel<Items.Event> = {

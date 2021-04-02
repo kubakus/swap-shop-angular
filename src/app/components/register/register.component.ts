@@ -72,7 +72,7 @@ export class RegisterComponent {
       );
   }
 
-  public getControlError(control: AbstractControl): string | undefined {
+  public getControlError(control: AbstractControl): string {
     return getControlMessage(control);
   }
 }
