@@ -39,6 +39,7 @@ export namespace Items {
     when: Date; // Should be a date
     info: string;
     contactInfo: string; // Should be an email/phone ?
+    email: string;
   }
 
   export interface MaterialServiceCreateRequest {

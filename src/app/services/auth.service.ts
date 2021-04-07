@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { Users } from '../shared/models/users';
-import { map, shareReplay, take, tap } from 'rxjs/operators';
+import { map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 import { Roles } from '../shared/models/roles';
 import { Router } from '@angular/router';
 import jwtDecode from 'jwt-decode';
@@ -25,7 +25,7 @@ export class AuthService {
   private refreshTokenTimeout?: NodeJS.Timeout;
 
   private tokenSubject: BehaviorSubject<string | undefined>;
-  // private userSubject?: BehaviorSubject<Users.User>;
+  private userSubject?: BehaviorSubject<Users.User>;
   private rolesSubject: BehaviorSubject<Roles.Type[] | undefined>;
   private usersLookupSubject?: BehaviorSubject<Users.User[]>;
 
@@ -36,11 +36,23 @@ export class AuthService {
     this.tokenSubject = new BehaviorSubject<string | undefined>(undefined);
     // Swap it all to userSubject using /me endpoint
     this.rolesSubject = new BehaviorSubject<Roles.Type[] | undefined>(undefined);
-    // this.usersLookupSubject?: BehaviorSubject<Users.User[]>;
   }
 
   public get token(): string | undefined {
     return this.tokenSubject.getValue();
+  }
+
+  public get userInfo(): Observable<Users.User> {
+    if (!this.userSubject) {
+      return this.httpClient.get<Users.User>(`${ROOT_ROUTE}/me`).pipe(
+        take(1),
+        switchMap((user) => {
+          this.userSubject = new BehaviorSubject(user);
+          return this.userSubject.asObservable();
+        }),
+      );
+    }
+    return this.userSubject.asObservable();
   }
 
   public get users(): Observable<Users.User[]> {
@@ -84,9 +96,9 @@ export class AuthService {
     this.stopRefreshTokenTimer();
   }
 
-  public getUserInfo(): Observable<Users.User> {
-    return this.httpClient.get<Users.User>(`${ROOT_ROUTE}/me`);
-  }
+  // public getUserInfo(): Observable<Users.User> {
+  //   return this.httpClient.get<Users.User>(`${ROOT_ROUTE}/me`);
+  // }
 
   public register(request: Users.CreateRequest): Observable<void> {
     return this.httpClient.post<void>(`${ROOT_ROUTE}/register`, request);

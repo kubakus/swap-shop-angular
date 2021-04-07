@@ -27,6 +27,11 @@
                 <textarea matInput formControlName="info"></textarea>
                 <mat-error *ngIf="form.controls.info.invalid">{{ getControlError(form.controls.info) }}</mat-error>
             </mat-form-field>
+            <!-- email -->
+            <mat-form-field appearance="outline">
+                <mat-label>Email</mat-label>
+                <input matInput type="email" formControlName="email" readonly>
+            </mat-form-field>
             <!-- contact -->
             <mat-form-field appearance="outline">
                 <mat-label>Contact Information</mat-label>

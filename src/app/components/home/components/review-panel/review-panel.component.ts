@@ -43,7 +43,7 @@ export class ReviewPanelComponent implements OnInit {
 
   private baseEventFields: Panel<Items.Event> = {
     title: { name: 'eventName', displayName: 'Event' },
-    description: { name: 'createdBy', displayName: 'By' },
+    description: { name: 'email', displayName: 'By' },
     content: [
       { name: 'when', displayName: 'When' },
       { name: 'info', displayName: 'Information' },
@@ -54,31 +54,84 @@ export class ReviewPanelComponent implements OnInit {
   public reviewedOffersFields: Panel<Items.Offer> = {
     ...this.baseOfferFields,
     status: { name: 'state', displayName: 'Status' },
+    actions: [
+      {
+        name: 'Back to review',
+        callback: (offer: Items.Offer): void =>
+          this.changeSingleOffer(offer, ItemState.AWAITING_REVIEW),
+      },
+    ],
   };
 
   public offerFields: Panel<Items.Offer> = {
     ...this.baseOfferFields,
     showCheckBox: true,
+    actions: [
+      {
+        name: 'Approve',
+        callback: (offer: Items.Offer): void => this.changeSingleOffer(offer, ItemState.APPROVED),
+      },
+      {
+        name: 'Reject',
+        callback: (offer: Items.Offer): void => this.changeSingleOffer(offer, ItemState.REJECTED),
+      },
+    ],
   };
 
   public reviewedWantFields: Panel<Items.Wanted> = {
     ...this.reviewedOffersFields,
     title: { name: 'itemName', displayName: 'Wanted' },
+    actions: [
+      {
+        name: 'Back to review',
+        callback: (wanted: Items.Wanted): void =>
+          this.changeSingleWanted(wanted, ItemState.AWAITING_REVIEW),
+      },
+    ],
   };
 
   public wantFields: Panel<Items.Wanted> = {
     ...this.offerFields,
     title: { name: 'itemName', displayName: 'Wanted' },
+    actions: [
+      {
+        name: 'Approve',
+        callback: (wanted: Items.Wanted): void =>
+          this.changeSingleWanted(wanted, ItemState.APPROVED),
+      },
+      {
+        name: 'Reject',
+        callback: (wanted: Items.Wanted): void =>
+          this.changeSingleWanted(wanted, ItemState.REJECTED),
+      },
+    ],
   };
 
   public reviewedEventsFields: Panel<Items.Event> = {
     ...this.baseEventFields,
     status: { name: 'state', displayName: 'Status' },
+    actions: [
+      {
+        name: 'Back to review',
+        callback: (event: Items.Event): void =>
+          this.changeSingleEvent(event, ItemState.AWAITING_REVIEW),
+      },
+    ],
   };
 
   public eventsFields: Panel<Items.Event> = {
     ...this.baseEventFields,
     showCheckBox: true,
+    actions: [
+      {
+        name: 'Approve',
+        callback: (event: Items.Event): void => this.changeSingleEvent(event, ItemState.APPROVED),
+      },
+      {
+        name: 'Reject',
+        callback: (event: Items.Event): void => this.changeSingleEvent(event, ItemState.REJECTED),
+      },
+    ],
   };
 
   private offersService: OffersService;
@@ -254,5 +307,92 @@ export class ReviewPanelComponent implements OnInit {
       this.wantedService.getWanted({ state: states }).pipe(take(1)),
       this.eventsService.getEvents({ state: states }).pipe(take(1)),
     ]);
+  }
+
+  private changeSingleOffer(offer: Items.Offer, transition: ItemState): void {
+    this.offersService
+      .changeOffersState({ ids: [offer.id], transition })
+      .pipe(
+        take(1),
+        switchMap((_res) => {
+          return forkJoin([
+            this.offersService.getOffers({ state: ItemState.AWAITING_REVIEW }).pipe(take(1)),
+            this.offersService
+              .getOffers({ state: [ItemState.APPROVED, ItemState.REJECTED] })
+              .pipe(take(1)),
+          ]);
+        }),
+      )
+      .subscribe(
+        ([awaitingReview, reviewed]) => {
+          this.offers = awaitingReview;
+          this.reviewedOffers = reviewed;
+        },
+        (err) => {
+          console.error('Failed to change state of an offer', err);
+          this.alertService.show({
+            type: 'error',
+            message: `Failed to change state of an offer ${offer.itemName}`,
+          });
+        },
+      );
+  }
+
+  private changeSingleWanted(wanted: Items.Wanted, transition: ItemState): void {
+    this.wantedService
+      .changeWantedState({ ids: [wanted.id], transition })
+      .pipe(
+        take(1),
+        switchMap((_res) => {
+          return forkJoin([
+            this.wantedService.getWanted({ state: ItemState.AWAITING_REVIEW }).pipe(take(1)),
+            this.wantedService
+              .getWanted({ state: [ItemState.APPROVED, ItemState.REJECTED] })
+              .pipe(take(1)),
+          ]);
+        }),
+      )
+      .subscribe(
+        ([awaitingReview, reviewed]) => {
+          this.wants = awaitingReview;
+          this.reviewedWants = reviewed;
+        },
+        (err) => {
+          console.error('Failed to change state of an wanted', err);
+          this.alertService.show({
+            type: 'error',
+            message: `Failed to change state of an wanted ${wanted.itemName}`,
+          });
+        },
+      );
+  }
+
+  private changeSingleEvent(event: Items.Event, transition: ItemState): void {
+    this.eventsService
+      .changeEventsState({ ids: [event.id], transition })
+      .pipe(
+        take(1),
+        switchMap((_res) => {
+          return forkJoin([
+            this.eventsService.getEvents({ state: ItemState.AWAITING_REVIEW }).pipe(take(1)),
+            this.eventsService
+              .getEvents({ state: [ItemState.APPROVED, ItemState.REJECTED] })
+              .pipe(take(1)),
+          ]);
+        }),
+      )
+      .subscribe(
+        ([awaitingReview, reviewed]) => {
+          this.events = awaitingReview;
+          this.reviewedEvents = reviewed;
+        },
+        (err) => {
+          console.error('Failed to change state of an event', err);
+          this.alertService.show({
+            type: 'error',
+            message: `Failed to change state of an event ${event.eventName}`,
+          });
+        },
+      );
   }
 }
