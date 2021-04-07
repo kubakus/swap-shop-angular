@@ -1,11 +1,11 @@
 <div class="center-flex">
     <h2>Login</h2>
     <form [formGroup]="form" class="form-container" (submit)="onSubmit()">
-        <mat-form-field>
+        <mat-form-field appearance="outline">
             <mat-label>E-Mail Address</mat-label>
             <input matInput formControlName="email" type="text" required>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field appearance="outline">
             <mat-label>Password</mat-label>
             <input matInput formControlName="password" type="password" required>
         </mat-form-field>

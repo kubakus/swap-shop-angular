@@ -10,6 +10,12 @@ export interface Panel<T = any> {
   description: Cell<T>;
   status?: Cell<T>;
   content: Cell<T>[];
+  actions?: Action<T>[];
+}
+
+interface Action<T = any> {
+  name: string;
+  callback: (item: T) => void;
 }
 
 interface Cell<T> {

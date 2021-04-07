@@ -16,6 +16,18 @@
             <div>{{ panelSettings.description.displayName || panelSettings.description.name }}: {{ item[panelSettings.description.name]}}</div>
             <!-- ?. to make compiler happy -->
             <div *ngIf="panelSettings.status">{{ panelSettings.status?.displayName || panelSettings.status?.name }}: {{ item[panelSettings.status!.name] }}</div>
+            <ng-container *ngIf="panelSettings.actions">
+                <!-- <div > -->
+                    <button mat-icon-button [matMenuTriggerFor]="actions" aria-label="Button that opens actions menu" (click)="$event.stopPropagation()">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #actions="matMenu">
+                        <button mat-menu-item *ngFor="let action of panelSettings.actions" (click)="action.callback(item)">
+                            <span>{{ action.name }}</span>
+                        </button>
+                    </mat-menu>
+                <!-- </div> -->
+            </ng-container>
         </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="panel-content">

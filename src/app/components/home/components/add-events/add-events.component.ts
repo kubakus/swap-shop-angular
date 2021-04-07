@@ -1,8 +1,9 @@
 import { NGX_MAT_DATE_FORMATS } from '@angular-material-components/datetime-picker';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { take } from 'rxjs/operators';
 import { AlertService } from 'src/app/services/alert.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { EventsService } from 'src/app/services/events.service';
 import { CUSTOM_MAT_DATE_FORMATS } from 'src/app/shared/datepicker-format';
 import { getControlMessage } from 'src/app/shared/helpers';
@@ -19,17 +20,26 @@ const SUBS_SEND_DAY = 1;
   styleUrls: ['./add-events.component.scss'],
   providers: [{ provide: NGX_MAT_DATE_FORMATS, useValue: CUSTOM_MAT_DATE_FORMATS }],
 })
-export class AddEventsComponent {
+export class AddEventsComponent implements OnInit {
   public form: FormGroup;
   // indicates day after next day when emails are sent to the users
   public dayAfterNextSubsOut: Date = this.getNextDate();
 
+  private authService: AuthService;
   private eventsService: EventsService;
   private alertService: AlertService;
 
-  public constructor(eventsService: EventsService, alertService: AlertService) {
+  public constructor(
+    eventsService: EventsService,
+    alertService: AlertService,
+    authService: AuthService,
+  ) {
     this.form = new FormGroup({
       eventName: new FormControl(undefined, Validators.required),
+      email: new FormControl(
+        undefined,
+        Validators.compose([Validators.required, Validators.email]),
+      ),
       // TODO add correct data validator
       when: new FormControl(undefined, Validators.required),
       info: new FormControl(undefined, Validators.required),
@@ -38,6 +48,16 @@ export class AddEventsComponent {
 
     this.eventsService = eventsService;
     this.alertService = alertService;
+    this.authService = authService;
+  }
+
+  public ngOnInit(): void {
+    this.authService.userInfo.pipe(take(1)).subscribe(
+      (res) => {
+        this.form.controls.email.setValue(res.email);
+      },
+      (err) => console.error('Failed to get user info', err),
+    );
   }
 
   public getControlError(control: AbstractControl): string {
@@ -50,6 +70,7 @@ export class AddEventsComponent {
       when: this.form.value.when,
       info: this.form.value.info,
       contactInfo: this.form.value.contactInfo,
+      email: this.form.value.email,
     };
     this.eventsService
       .createEvent(request)

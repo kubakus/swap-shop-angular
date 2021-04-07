@@ -64,15 +64,12 @@ export class AddOffersWantedComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.authService
-      .getUserInfo()
-      .pipe(take(1))
-      .subscribe(
-        (res) => {
-          this.form.controls.email.setValue(res.email);
-        },
-        (err) => console.error('Failed to get user info', err),
-      );
+    this.authService.userInfo.pipe(take(1)).subscribe(
+      (res) => {
+        this.form.controls.email.setValue(res.email);
+      },
+      (err) => console.error('Failed to get user info', err),
+    );
   }
 
   public onSubmit(): void {
