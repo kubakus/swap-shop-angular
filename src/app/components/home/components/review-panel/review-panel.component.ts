@@ -10,6 +10,8 @@ import { ItemState } from 'src/app/shared/models/item-state';
 import { catchError, map, switchMap, take } from 'rxjs/operators';
 import { Base } from 'src/app/shared/models/base';
 import { Alerts } from 'src/app/shared/models/alerts';
+import { SubscriptionsService } from 'src/app/services/subscriptions.service';
+import { Subscriptions } from 'src/app/shared/models/subscriptions';
 
 @Component({
   selector: 'app-review-panel',
@@ -30,6 +32,15 @@ export class ReviewPanelComponent implements OnInit {
   public someOffersChecked?: boolean;
   public someWantsChecked?: boolean;
   public someEventsChecked?: boolean;
+
+  public nextSubscriptionDate?: Date;
+
+  private offersService: OffersService;
+  private wantedService: WantedService;
+  private eventsService: EventsService;
+  private subscriptionsService: SubscriptionsService;
+
+  private alertService: AlertService;
 
   private baseOfferFields: Panel<Items.Offer> = {
     title: { name: 'itemName', displayName: 'Offered' },
@@ -134,25 +145,38 @@ export class ReviewPanelComponent implements OnInit {
     ],
   };
 
-  private offersService: OffersService;
-  private wantedService: WantedService;
-  private eventsService: EventsService;
-
-  private alertService: AlertService;
-
   public constructor(
     offersService: OffersService,
     wantedService: WantedService,
     eventsService: EventsService,
     alertService: AlertService,
+    subscriptionsService: SubscriptionsService,
   ) {
     this.offersService = offersService;
     this.wantedService = wantedService;
     this.eventsService = eventsService;
     this.alertService = alertService;
+    this.subscriptionsService = subscriptionsService;
   }
 
   public ngOnInit(): void {
+    this.subscriptionsService
+      .getSubscriptions({ state: Subscriptions.State.AWAITING_DISPATCH })
+      .pipe(take(1))
+      .subscribe({
+        next: (subs) => {
+          if (subs.length) {
+            this.nextSubscriptionDate = new Date(subs[0].date);
+          }
+        },
+        error: (err) => {
+          console.error('Failed to fetch subscription info', err);
+          this.alertService.show({
+            type: 'error',
+            message: 'Failed to fetch subscription info',
+          });
+        },
+      });
     this.fetchAll().subscribe({
       error: (err) => {
         this.alertService.show({

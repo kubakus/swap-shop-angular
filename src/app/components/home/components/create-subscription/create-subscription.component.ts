@@ -1,6 +1,7 @@
 import { NGX_MAT_DATE_FORMATS } from '@angular-material-components/datetime-picker';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { AlertService } from 'src/app/services/alert.service';
 import { SubscriptionsService } from 'src/app/services/subscriptions.service';
@@ -19,13 +20,21 @@ import { DEFAULT_FOOTER, DEFAULT_HEADER } from 'src/app/shared/subscriptions-mes
 export class CreateSubscriptionComponent implements OnInit {
   public form: FormGroup;
   public minDate = new Date();
+  public existingSubscriptionDate?: Date;
+  public loadingData = true;
 
   private subscriptionsService: SubscriptionsService;
   private alertService: AlertService;
+  private router: Router;
 
-  public constructor(subscriptionsService: SubscriptionsService, alertService: AlertService) {
+  public constructor(
+    subscriptionsService: SubscriptionsService,
+    alertService: AlertService,
+    router: Router,
+  ) {
     this.subscriptionsService = subscriptionsService;
     this.alertService = alertService;
+    this.router = router;
 
     this.form = new FormGroup({
       date: new FormControl(undefined, Validators.required),
@@ -34,10 +43,26 @@ export class CreateSubscriptionComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    console.log('date', new Date().toUTCString());
-    console.log('date iso', new Date().toISOString());
-    console.log('date iso to local', new Date(new Date().toISOString()).toLocaleString());
+  public ngOnInit(): void {
+    this.subscriptionsService
+      .getSubscriptions({ state: Subscriptions.State.AWAITING_DISPATCH })
+      .pipe(take(1))
+      .subscribe({
+        next: (subs) => {
+          if (subs.length) {
+            const currentSubs = subs[0];
+            this.existingSubscriptionDate = new Date(currentSubs.date);
+          }
+          this.loadingData = false;
+        },
+        error: (err) => {
+          console.error('Failed to get existing subscriptions', err);
+          this.alertService.show({
+            type: 'error',
+            message: 'Failed to fetch existing subscriptions',
+          });
+        },
+      });
   }
 
   public getControlError(control: AbstractControl): string {
@@ -61,6 +86,7 @@ export class CreateSubscriptionComponent implements OnInit {
             message: 'Subscription has been created successfully',
             autoClose: Alerts.AlertLength.Long,
           });
+          this.router.navigate(['../review']);
         },
         (err) => {
           console.error('Failed to create the subscription', err);

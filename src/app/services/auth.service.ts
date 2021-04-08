@@ -96,10 +96,6 @@ export class AuthService {
     this.stopRefreshTokenTimer();
   }
 
-  // public getUserInfo(): Observable<Users.User> {
-  //   return this.httpClient.get<Users.User>(`${ROOT_ROUTE}/me`);
-  // }
-
   public register(request: Users.CreateRequest): Observable<void> {
     return this.httpClient.post<void>(`${ROOT_ROUTE}/register`, request);
   }

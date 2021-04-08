@@ -1,5 +1,9 @@
 <div class="center-flex">
     <h2>Create subscription</h2>
+    <ng-container *ngIf="!loadingData; else loading">
+    <div *ngIf="existingSubscriptionDate">
+        <p>WARNING: Creating new subscription will invalidate subscription for date {{ existingSubscriptionDate.toLocaleString() }}</p>
+    </div>
     <form [formGroup]="form" class="form-container" (submit)="onSubmit()">            
         <mat-form-field appearance="outline">
             <mat-label>Date</mat-label>
@@ -35,4 +39,8 @@
             <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid">Submit</button>
         </div>
     </form>
+</ng-container>
+    <ng-template #loading>
+        <app-loading ></app-loading>
+    </ng-template>
 </div>
