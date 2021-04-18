@@ -55,21 +55,18 @@ export class AuthService {
     return this.userSubject.asObservable();
   }
 
-  public get users(): Observable<Users.User[]> {
-    if (!this.hasRole(Roles.Type.ADMIN)) {
-      return of([]);
-    }
-    if (!this.usersLookupSubject) {
-      return this.httpClient.get<Users.User[]>(`${ROOT_ROUTE}`);
-    }
-    return this.usersLookupSubject.asObservable();
-  }
-
-  public hasRole(role: Roles.Type): boolean {
+  public hasRole(role: Roles.Type): Observable<boolean> {
     if (!this.rolesSubject) {
-      return false;
+      return of(false);
     }
-    return Boolean(this.rolesSubject.getValue()?.includes(role));
+    return this.rolesSubject.asObservable().pipe(
+      map((roles) => {
+        if (!roles) {
+          return false;
+        }
+        return roles.includes(role);
+      }),
+    );
   }
 
   public get isLoggedIn(): Observable<boolean> {

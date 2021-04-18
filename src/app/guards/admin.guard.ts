@@ -7,6 +7,7 @@ import {
   Router,
 } from '@angular/router';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { Roles } from '../shared/models/roles';
 
@@ -25,8 +26,8 @@ export class AdminGuard implements CanActivate {
     _route: ActivatedRouteSnapshot,
     _state: RouterStateSnapshot,
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const canAccess = this.authService.hasRole(Roles.Type.ADMIN);
+    const canAccessObs = this.authService.hasRole(Roles.Type.ADMIN);
     const homePath = this.router.parseUrl('/');
-    return canAccess || homePath;
+    return canAccessObs.pipe(map((canAccess) => canAccess || homePath));
   }
 }

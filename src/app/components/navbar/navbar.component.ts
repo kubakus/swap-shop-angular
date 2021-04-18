@@ -10,7 +10,7 @@ import { Roles } from 'src/app/shared/models/roles';
 })
 export class NavbarComponent {
   public isLoggedIn: Observable<boolean>;
-  public isAdmin: boolean;
+  public isAdmin: Observable<boolean>;
 
   private authService: AuthService;
 
