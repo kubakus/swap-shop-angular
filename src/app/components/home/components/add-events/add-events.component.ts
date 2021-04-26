@@ -1,19 +1,16 @@
 import { NGX_MAT_DATE_FORMATS } from '@angular-material-components/datetime-picker';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { combineLatest } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { EventsService } from 'src/app/services/events.service';
+import { SubscriptionsService } from 'src/app/services/subscriptions.service';
 import { CUSTOM_MAT_DATE_FORMATS } from 'src/app/shared/datepicker-format';
 import { getControlMessage } from 'src/app/shared/helpers';
 import { Alerts } from 'src/app/shared/models/alerts';
 import { Items } from 'src/app/shared/models/items';
-
-// Sunday is equal to 0;
-// Currently Monday
-const SUBS_SEND_DAY = 1;
-
 @Component({
   selector: 'app-add-events',
   templateUrl: './add-events.component.html',
@@ -22,17 +19,19 @@ const SUBS_SEND_DAY = 1;
 })
 export class AddEventsComponent implements OnInit {
   public form: FormGroup;
-  // indicates day after next day when emails are sent to the users
-  public dayAfterNextSubsOut: Date = this.getNextDate();
+
+  public minDate = new Date();
 
   private authService: AuthService;
   private eventsService: EventsService;
   private alertService: AlertService;
+  private subscriptionsService: SubscriptionsService;
 
   public constructor(
     eventsService: EventsService,
     alertService: AlertService,
     authService: AuthService,
+    subscriptionsService: SubscriptionsService,
   ) {
     this.form = new FormGroup({
       eventName: new FormControl(undefined, Validators.required),
@@ -49,12 +48,22 @@ export class AddEventsComponent implements OnInit {
     this.eventsService = eventsService;
     this.alertService = alertService;
     this.authService = authService;
+    this.subscriptionsService = subscriptionsService;
   }
 
   public ngOnInit(): void {
-    this.authService.userInfo.pipe(take(1)).subscribe(
-      (res) => {
-        this.form.controls.email.setValue(res.email);
+    combineLatest([
+      this.authService.userInfo,
+      this.subscriptionsService.getSubscriptions({ state: 'AwaitingDispatch' }),
+    ]).subscribe(
+      ([userInfo, subscriptions]) => {
+        this.form.controls.email.setValue(userInfo.email);
+        if (subscriptions.length) {
+          // There should be only one awaiting subscription
+          const sub = subscriptions[0];
+          const dispatchDate = new Date(sub.date);
+          this.minDate = this.getNextDate(dispatchDate.getDay());
+        }
       },
       (err) => console.error('Failed to get user info', err),
     );
@@ -93,10 +102,10 @@ export class AddEventsComponent implements OnInit {
       );
   }
 
-  private getNextDate(): Date {
+  private getNextDate(dispatchDay: number): Date {
     const nextDate = new Date();
     nextDate.setHours(0, 0, 0, 0);
-    nextDate.setDate(nextDate.getDate() + 2 + ((SUBS_SEND_DAY + 7 - nextDate.getDay() - 1) % 7));
+    nextDate.setDate(nextDate.getDate() + 2 + ((dispatchDay + 7 - nextDate.getDay() - 1) % 7));
     return nextDate;
   }
 }

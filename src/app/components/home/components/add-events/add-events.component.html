@@ -14,11 +14,10 @@
                 <mat-label>When</mat-label>
                 <!-- Setting this to readonly to disable manual input. Due to that, there is no need for
                 validation since user can only choose dates after next email release dates -->
-                <input matInput [ngxMatDatetimePicker]="picker" formControlName="when" readonly (click)="picker.open()" [min]="dayAfterNextSubsOut"/>
+                <input matInput [ngxMatDatetimePicker]="picker" formControlName="when" readonly (click)="picker.open()" [min]="minDate"/>
                 <mat-datepicker-toggle matSuffix [for]="$any(picker)"></mat-datepicker-toggle>
                 <ngx-mat-datetime-picker #picker ></ngx-mat-datetime-picker>
-
-                <mat-hint>Date cannot be earlier than {{ dayAfterNextSubsOut.toLocaleString() }}</mat-hint>
+                <mat-hint>Date cannot be earlier than {{ minDate.toLocaleString() }}</mat-hint>
                 <mat-error *ngIf="form.controls.when.invalid">{{ getControlError(form.controls.when) }}</mat-error>
             </mat-form-field>
             <!-- info -->
