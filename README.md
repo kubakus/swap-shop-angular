@@ -1,27 +1,18 @@
-# SwapshopUi
+# UI repository for SwapShop Management Project
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.1.4.
+## Prerequisites
+* Docker [Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
+* Docker-compose [Mac/Windows/Linux](https://docs.docker.com/compose/install/)
+* Node version ~14.15.4 [Node.js website](https://nodejs.org/en/download/package-manager/#snap) - it is worth to install Node using nvm [tutorial](https://nodesource.com/blog/installing-node-js-tutorial-using-nvm-on-mac-os-x-and-ubuntu/)
+* Angular CLI [Angular docs](https://angular.io/guide/setup-local)
+* yarn [Install guide](https://classic.yarnpkg.com/en/docs/install/#debian-stable)
 
-## Development server
+# Run
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+1. yarn serv:dc - Create Nginx container to redirect Http calls to db-api
+2. yarn serve - Start the UI
 
-## Code scaffolding
+Application will be accessible on http://localhost:4300/
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+For more information about the commands, see package.json file.
 
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
